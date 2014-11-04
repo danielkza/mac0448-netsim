@@ -28,9 +28,9 @@ l3.attach_sniffer 's3', 's3.txt'
 
 @sim.add r0, h0, h1, h2, h3, l0, l1, l2, l3
 
-@sim.at(1, a2, 'GET blabalbla')
-    .at(3, a0, 'get address...')
-    .at(4, a3, 'send address...')
-    .at(5, 'finish')
+@sim.at(0.0001, a2, 'GET blabalbla')
+    .at(0.00013, a0, 'get address...')
+    .at(0.0014, a3, 'send address...')
+    .at(0.002675, 'finish')
 
 loop { @sim.tick }

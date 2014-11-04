@@ -28,8 +28,8 @@ class Router < NetworkEntity
     # atualiza timer do delay
     # verifica pacotes das interfaces e envia
 
-    @ports.each do |p|
-      puts "port #{p.ip}, cap #{@capacities[p.port]}"
-    end
+    # @ports.each do |p|
+    #   puts "port #{p.ip}, cap #{@capacities[p.port]}"
+    # end
   end
 end

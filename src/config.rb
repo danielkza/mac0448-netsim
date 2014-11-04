@@ -3,5 +3,5 @@ module SimConfig
   IP_MSS = 1460
 
   # Intervalo entre cada passo da simulação, em microssegundos
-  SIM_TICK = 1
+  SIM_TICK = 100
 end
