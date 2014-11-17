@@ -1,4 +1,5 @@
 require_relative 'simulator'
+require_relative 'packet'
 
 sim = Simulator.new
 
@@ -16,7 +17,10 @@ l2 = Link.new h2, r0[0], 1000, 10
 l3 = Link.new h3, r0[0], 1000, 10
 l4 = Link.new h3, r1[2], 1000, 10
 
-r0.set_performance(150, 1000, 2000)
+r0.set_performance(150, 0, 1000, 1, 2000)
+# r0.add_route('10.0.0.0', 0, '10.1.0.0', 1, '192.168.0.0', '192.168.3.1')
+# r0.send_packet(0, Packet.new(NetworkInterface.new('10.0.0.5', 5), NetworkInterface.new('10.0.0.6', 47)))
+# r0.send_packet(0, Packet.new(NetworkInterface.new('10.0.0.5', 5), NetworkInterface.new('10.1.5.6', 47)))
 
 h0.attach_agent(a0 = Agent.new('HTTPServer'))
 h1.attach_agent(a1 = Agent.new('FTPServer'))
