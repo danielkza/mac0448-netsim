@@ -2,9 +2,9 @@ require_relative 'network_interface'
 
 class NetworkEntity
   def initialize *args
-    @ports = []
-    args.each_with_index do |a, i|
-      @ports << NetworkInterface.new(a, i)
+    @ports = {}
+    args.each_slice(2) do |slice|
+      @ports[slice[0]] = NetworkInterface.new(slice[1], slice[0]) if slice[1]
     end
   end
 

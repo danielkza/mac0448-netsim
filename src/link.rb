@@ -31,10 +31,10 @@ class Link
     # executa ações...
 
     # loga se tiver sniffer
-    if @sniffer_id
-      File.open(@sniffer_output, 'a') do |f|
-        f.puts "log from #{@sniffer_id}..."
-      end
-    end
+    # if @sniffer_id
+    #   File.open(@sniffer_output, 'a') do |f|
+    #     f.puts "log from #{@sniffer_id}..."
+    #   end
+    # end
   end
 end

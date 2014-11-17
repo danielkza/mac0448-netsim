@@ -4,7 +4,7 @@ class Host < NetworkEntity
   attr_reader :ip, :gateway, :dns, :agent
 
   def initialize ip, gateway, dns
-    super ip
+    super 0, ip
     @ip = ip
     @gateway = gateway
     @dns = dns

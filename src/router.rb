@@ -21,7 +21,7 @@ class Router < NetworkEntity
 
   # precisa entender os parâmetros para criação de rota no arquivo de entrada...
   def add_route
-    # aqui são criadas instâncias de Link
+
   end
 
   def tick
