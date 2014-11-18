@@ -9,7 +9,7 @@ r1 = Router.new(0, '10.0.2.1', 1, '10.0.3.1', 2, '10.0.4.1')
 h0 = Host.new('10.0.0.2', '10.0.0.1', '10.0.0.5')
 h1 = Host.new('10.0.1.3', '10.0.1.1', '10.0.0.5')
 h2 = Host.new('10.0.0.4', '10.0.0.1', '10.0.0.5')
-h3 = Host.new('10.0.0.5', '10.0.0.1', '1.1.1.1')
+h3 = Host.new('192.168.1.2', '10.0.0.1', '1.1.1.1')
 
 l0 = Link.new h0, r0[0], 1000, 10
 l1 = Link.new h1, r0[1], 1000, 10
@@ -18,9 +18,9 @@ l3 = Link.new h3, r0[0], 1000, 10
 l4 = Link.new h3, r1[2], 1000, 10
 
 r0.set_performance(150, 0, 1000, 1, 2000)
-# r0.add_route('10.0.0.0', 0, '10.1.0.0', 1, '192.168.0.0', '192.168.3.1')
-# r0.send_packet(0, Packet.new(NetworkInterface.new('10.0.0.5', 5), NetworkInterface.new('10.0.0.6', 47)))
-# r0.send_packet(0, Packet.new(NetworkInterface.new('10.0.0.5', 5), NetworkInterface.new('10.1.5.6', 47)))
+r0.add_route('10.0.0.0', 0, '10.1.0.0', 1, '192.168.0.0', '192.168.3.1')
+h0.send_packet('10.0.1.3', 'blablah')
+h2.send_packet('192.168.1.2', 'hey friend!')
 
 h0.attach_agent(a0 = Agent.new('HTTPServer'))
 h1.attach_agent(a1 = Agent.new('FTPServer'))
