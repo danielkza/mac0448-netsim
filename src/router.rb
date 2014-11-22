@@ -1,5 +1,4 @@
 require_relative 'network_entity'
-require 'ipaddr'
 
 class Router < NetworkEntity
   def initialize *args
@@ -8,8 +7,8 @@ class Router < NetworkEntity
     @capacities = {}
   end
 
-  def [] port
-    @ports[port]
+  def [] num
+    @interfaces[num]
   end
 
   def set_performance processing_time, *args
@@ -20,22 +19,8 @@ class Router < NetworkEntity
     end
   end
 
-  def send_packet dest_ip, content
-    ip = IPAddr.new(dest_ip).to_i
-    @routes.each do |r|
-      if ip & r[1] == r[0]
-        if r[2].is_a? String
-          send_packet r[2], content
-        else
-          @ports[r[2]].send_packet content
-        end
-        break
-      end
-    end
-  end
-
-  def receive_packet port, pkt
-    @buffers[port] << pkt
+  def receive_packet interface_num, pkt
+    @buffers[interface_num] << pkt
   end
 
   def tick
@@ -48,6 +33,6 @@ class Router < NetworkEntity
   end
 
   def process_packet pkt
-    puts "processando #{pkt.src.ip}:#{pkt.src.port} -> #{pkt.dest.ip}:#{pkt.dest.port}"
+    puts "processando #{pkt.data}"
   end
 end

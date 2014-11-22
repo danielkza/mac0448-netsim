@@ -6,12 +6,13 @@ class Host < NetworkEntity
   def initialize ip, gateway, dns
     super 0, ip
     @ip = ip
-    @gateway = gateway
     @dns = dns
+    add_route '0.0.0.0', gateway
+    add_route gateway, 0
   end
 
   def interface
-    @ports[0]
+    @interfaces[0]
   end
 
   def attach_agent agent
@@ -19,12 +20,7 @@ class Host < NetworkEntity
     @agent = agent
   end
 
-  def send_packet dest_ip, content
-    pkt = Packet.new(@ip, 0, dest_ip, 0, content)
-    interface.send_packet pkt
-  end
-
-  def receive_packet port, pkt
-    puts "#{@ip}: recebi #{pkt.content}"
+  def receive_packet interface_num, pkt
+    puts "#{@ip}: recebi #{pkt.data}"
   end
 end

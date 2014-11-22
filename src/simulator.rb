@@ -21,7 +21,7 @@ class Simulator
       if e.is_a? Link; @links << e
       elsif e.is_a? Host; @agents << e.agent
       elsif e.is_a? Router; @routers << e
-      else; puts 'Error! Unknown entity.'; end
+      else; raise 'Error! Unknown entity.'; end
     end
   end
 

@@ -1,5 +1,5 @@
 require_relative 'simulator'
-require_relative 'packet'
+require_relative 'ip/packet'
 
 sim = Simulator.new
 
@@ -19,8 +19,14 @@ l4 = Link.new h3, r1[2], 1000, 10
 
 r0.set_performance(150, 0, 1000, 1, 2000)
 r0.add_route('10.0.0.0', 0, '10.1.0.0', 1, '192.168.0.0', '192.168.3.1')
-h0.send_packet('10.0.1.3', 'blablah')
-h2.send_packet('192.168.1.2', 'hey friend!')
+h0.send_packet(IP::Packet.new(version: 4, dscp: 0, ecn: 0, id: 0xda00,
+                              flags: 0x02, frag_offset: 0, ttl: 64,
+                              protocol: IP::Packet::PROTO_UDP,
+                              src: IPAddr.new('10.0.0.2').to_i, dst: IPAddr.new('10.0.1.3').to_i, data: "\0" * 1410))
+h2.send_packet(IP::Packet.new(version: 4, dscp: 0, ecn: 0, id: 0xda00,
+                              flags: 0x02, frag_offset: 0, ttl: 64,
+                              protocol: IP::Packet::PROTO_UDP,
+                              src: IPAddr.new('10.0.0.4').to_i, dst: IPAddr.new('192.168.1.2').to_i, data: "\0" * 1410))
 
 h0.attach_agent(a0 = Agent.new('HTTPServer'))
 h1.attach_agent(a1 = Agent.new('FTPServer'))

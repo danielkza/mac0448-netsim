@@ -1,11 +1,9 @@
 class NetworkInterface
-  attr_reader :ip, :port
   attr_accessor :link
 
-  def initialize entity, ip, port
+  def initialize entity, num
     @entity = entity
-    @ip = ip
-    @port = port
+    @num = num
     @link = nil
   end
 
@@ -18,6 +16,6 @@ class NetworkInterface
   end
 
   def receive_packet pkt
-    @entity.receive_packet @port, pkt
+    @entity.receive_packet @num, pkt
   end
 end

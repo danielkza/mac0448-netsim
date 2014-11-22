@@ -19,8 +19,7 @@ class Link
     elsif entity.is_a? NetworkInterface
       entity
     else
-      puts 'Error! Tried to set link with unknown entity'
-      exit 1
+      raise 'Error! Tried to set link with unknown entity'
     end
   end
 

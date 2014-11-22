@@ -1,10 +1,11 @@
 require_relative 'network_interface'
+require 'ipaddr'
 
 class NetworkEntity
   def initialize *args
-    @ports = {}
+    @interfaces = {}
     args.each_slice(2) do |slice|
-      @ports[slice[0]] = NetworkInterface.new(self, slice[1], slice[0]) if slice[1]
+      @interfaces[slice[0]] = NetworkInterface.new(self, slice[0]) if slice[1]
     end
     @routes = []
   end
@@ -21,20 +22,27 @@ class NetworkEntity
 
   def add_route *args
     args.each_slice(2) do |slice|
-      @routes << [IPAddr.new(slice[0]).to_i, get_mask(slice[0]), slice[1]]
+      @routes << [IPAddr.new(slice[0]).mask(24), slice[1]]
     end
-    @routes.sort! { |r1, r2| r2[1] <=> r1[1] }
+    @routes.sort! { |r1, r2| r2[0].to_i <=> r1[0].to_i }
   end
 
-  def get_mask ip_str
-    ip = IPAddr.new(ip_str).to_i
-    c = 0
-    i = 0xff
-    while c < 32
-      break if ip & i > 0
-      i <<= 8
-      c += 8
+  def send_packet pkt
+    send_packet_r pkt.dst, pkt
+  end
+
+  def send_packet_r dest_ip, pkt
+    puts dest_ip
+    ip = IPAddr.new(dest_ip, Socket::AF_INET)
+    @routes.each do |r|
+      if r[0].include? ip
+        if @ports[r[1]]
+          @ports[r[1]].send_packet pkt
+        else
+          send_packet_r r[1], pkt
+        end
+        break
+      end
     end
-    0xffffffff - 2**c + 1
   end
 end
