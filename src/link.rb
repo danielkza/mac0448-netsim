@@ -4,23 +4,13 @@ require_relative 'network_interface'
 class Link
   # a e b são as interfaces dos dois lados do enlace
   def initialize a, b, capacity, delay
-    @a = get_interface a
-    @b = get_interface b
+    @a = a
+    @b = b
     @a.link = @b.link = self
     @capacity = capacity
     @delay = delay
     @to_a = []
     @to_b = []
-  end
-
-  def get_interface entity
-    if entity.is_a? Host
-      entity.interface
-    elsif entity.is_a? NetworkInterface
-      entity
-    else
-      raise 'Error! Tried to set link with unknown entity'
-    end
   end
 
   # Acopla um sniffer nesse enlace

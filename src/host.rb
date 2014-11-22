@@ -14,10 +14,6 @@ class Host < NetworkEntity
     add_route gateway, 0
   end
 
-  def interface
-    @interfaces[0]
-  end
-
   def attach_agent agent
     # provavelmente cada host vai ter só um
     @agent = agent

@@ -2,10 +2,12 @@ require_relative 'network_interface'
 require 'ipaddr'
 
 class NetworkEntity
+  attr_reader :interfaces
+
   def initialize num_ports
     @interfaces = {}
     (0...num_ports).each do |i|
-      @interfaces[i] = NetworkInterface.new(self, num)
+      @interfaces[i] = NetworkInterface.new(self, i)
     end
     @routes = []
   end
