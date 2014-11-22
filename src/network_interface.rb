@@ -1,5 +1,5 @@
 class NetworkInterface
-  attr_accessor :link
+  attr_accessor :ip, :link
 
   def initialize entity, num
     @entity = entity

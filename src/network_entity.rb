@@ -2,12 +2,16 @@ require_relative 'network_interface'
 require 'ipaddr'
 
 class NetworkEntity
-  def initialize *args
+  def initialize num_ports
     @interfaces = {}
-    args.each_slice(2) do |slice|
-      @interfaces[slice[0]] = NetworkInterface.new(self, slice[0]) if slice[1]
+    (0...num_ports).each do |i|
+      @interfaces[i] = NetworkInterface.new(self, num)
     end
     @routes = []
+  end
+
+  def add_interface num, ip
+    @interfaces[num].ip = ip
   end
 
   # possivelmente vai ter os algoritmos de TCP aqui

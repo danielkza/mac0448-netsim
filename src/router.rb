@@ -1,8 +1,8 @@
 require_relative 'network_entity'
 
 class Router < NetworkEntity
-  def initialize *args
-    super *args
+  def initialize num_interfaces
+    super
     @buffers = {}
     @capacities = {}
   end

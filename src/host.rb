@@ -3,8 +3,11 @@ require_relative 'network_entity'
 class Host < NetworkEntity
   attr_reader :ip, :gateway, :dns, :agent
 
-  def initialize ip, gateway, dns
-    super 0, ip
+  def initialize
+    super 1
+  end
+
+  def config ip, dns, gateway
     @ip = ip
     @dns = dns
     add_route '0.0.0.0', gateway
