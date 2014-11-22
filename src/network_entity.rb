@@ -15,14 +15,17 @@ class NetworkEntity
   end
 
   def add_interface num, ip
-    i = @interfaces[num]
-    i.ip = ip
-    if i.link
-      puts 'link'
-      if i == i.link.a
-        add_route_port i.link.b.ip, num, 32
-      else
-        add_route_port i.link.a.ip, num, 32
+    @interfaces[num].ip = ip
+  end
+
+  def prepare
+    @interfaces.each do |k, v|
+      if v.link
+        if v == v.link.a
+          add_route_port v.link.b.ip, k, 32
+        else
+          add_route_port v.link.a.ip, k, 32
+        end
       end
     end
   end
@@ -39,7 +42,6 @@ class NetworkEntity
 
   def sort_routes!
     @routes.sort! { |r1, r2| r2[0].to_i <=> r1[0].to_i }
-    p @routes
   end
 
   def add_route_ip target, destination, mask = 24
@@ -57,16 +59,12 @@ class NetworkEntity
   end
 
   def send_packet_r dest_ip, pkt
-    puts dest_ip
     ip = IPAddr.new(dest_ip, Socket::AF_INET)
     @routes.each do |r|
-      puts "ip: #{ip}; r: #{r[0]}, #{r[1]}"
       if r[0].include? ip
         if @interfaces[r[1]]
-          puts 'enviando'
           @interfaces[r[1]].send_packet pkt
         else
-          puts 'encaminhando'
           send_packet_r r[1], pkt
         end
         break

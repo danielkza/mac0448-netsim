@@ -12,7 +12,13 @@ l0 = Link.new h0.interfaces[0], r0[0], 554, 4
 l1 = Link.new h1.interfaces[0], r0[1], 45, 234
 r0.add_interface(0, '10.0.0.1')
 r0.add_interface(1, '10.0.0.1')
-r0.set_performance 100, 0, 4345, 1, 2453
+r0.set_processing_time 100
+r0.set_capacity 0, 4345
+r0.set_capacity 1, 2453
+
+r0.prepare
+h0.prepare
+h1.prepare
 
 h0.send_packet(IP::Packet.new(version: 4, dscp: 0, ecn: 0, id: 0xda00,
                               flags: 0x02, frag_offset: 0, ttl: 64,
