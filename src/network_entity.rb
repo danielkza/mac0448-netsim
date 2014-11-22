@@ -19,10 +19,10 @@ class NetworkEntity
     i.ip = ip
     if i.link
       puts 'link'
-      if i == link.a
-        add_route_port i.link.b.ip, num
+      if i == i.link.a
+        add_route_port i.link.b.ip, num, 32
       else
-        add_route_port i.link.a.ip, num
+        add_route_port i.link.a.ip, num, 32
       end
     end
   end
