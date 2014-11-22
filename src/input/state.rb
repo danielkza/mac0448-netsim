@@ -148,6 +148,20 @@ class Input::State
     end
   end
 
+  def configure_router_performance simulator: req_arg, router: router,
+                                   delay: req_arg, queue_sizes: req_arg
+    router = get_object(router[:identifier], Router)
+
+    router.set_processing_time(delay)
+    puts "configure_processing_time: #{router.name} #{delay}"
+
+    queue_sizes.each do |queue_size|
+      port, capacity = queue_size[:port], queue_size[:queue_size]
+      router.set_capacity(port, capacity)
+      puts "configure_capacity: #{router.name}.#{port} = #{capacity}"
+    end
+  end
+
   def run tree
     tree = tree.map(&method(:cleanup!))
     tree.each do |statement|
