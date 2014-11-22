@@ -13,7 +13,15 @@ class NetworkEntity
   end
 
   def add_interface num, ip
-    @interfaces[num].ip = ip
+    i = @interfaces[num]
+    i.ip = ip
+    if i.link
+      if i == link.a
+        add_route i.link.b.ip, num
+      else
+        add_route i.link.a.ip, num
+      end
+    end
   end
 
   # possivelmente vai ter os algoritmos de TCP aqui
@@ -28,9 +36,11 @@ class NetworkEntity
 
   def add_route *args
     args.each_slice(2) do |slice|
-      @routes << [IPAddr.new(slice[0]).mask(24), slice[1]]
+      @routes << [IPAddr.new("#{slice[0]}/24").mask(24), slice[1]]
     end
     @routes.sort! { |r1, r2| r2[0].to_i <=> r1[0].to_i }
+    puts "#{@ip}: "
+    p @routes
   end
 
   def send_packet pkt
@@ -41,10 +51,13 @@ class NetworkEntity
     puts dest_ip
     ip = IPAddr.new(dest_ip, Socket::AF_INET)
     @routes.each do |r|
+      puts "ip: #{ip}, r: #{r[0]}"
       if r[0].include? ip
-        if @ports[r[1]]
-          @ports[r[1]].send_packet pkt
+        if @interfaces[r[1]]
+          puts 'enviando'
+          @interfaces[r[1]].send_packet pkt
         else
+          puts 'encaminhando'
           send_packet_r r[1], pkt
         end
         break
