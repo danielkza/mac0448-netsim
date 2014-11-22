@@ -24,7 +24,7 @@ class Host < NetworkEntity
       raise 'Cannot change host already set for Agent' if @agent
 
       @agent = agent
-      agent.set_host(self)
+      agent.host = self
     end
   end
 

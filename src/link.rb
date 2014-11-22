@@ -27,7 +27,7 @@ class Link < SimulatorObject
       raise 'Cannot change sniffer already set for Link' if @agent
 
       @sniffer = sniffer
-      sniffer.set_link(self)
+      sniffer.link = self
     end
   end
 

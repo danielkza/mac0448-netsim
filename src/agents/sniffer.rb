@@ -1,4 +1,6 @@
-class Agent::Sniffer < Agent
+require_relative '../agent'
+
+class Agents::Sniffer < Agent
   def initialize *args
     super(*args)
     @link = nil
@@ -18,7 +20,6 @@ class Agent::Sniffer < Agent
     @log_file = File.open(@log_file_name, 'a')
     write_log_header
   end
-
 
   protected
 

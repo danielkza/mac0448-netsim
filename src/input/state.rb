@@ -4,6 +4,7 @@ require_relative '../simulator'
 require_relative '../host'
 require_relative '../router'
 require_relative '../agent'
+require_relative '../agents'
 
 class Input::State
   def initialize
@@ -28,6 +29,7 @@ class Input::State
         raise "Unknown action #{action.to_s}"
       end
     end
+    puts 'a'
   end
 
   def get_object identifier, type
@@ -60,7 +62,7 @@ class Input::State
         when 'Simulator'
           Simulator.new
         when 'Agent/Sniffer'
-          Agent.Sniffer.new
+          Agents::Sniffer.new
         when 'Agent/HTTPClient'
           raise 'HTTPClient not implemented yet'
         when 'Agent/HTTPServer'
@@ -175,7 +177,7 @@ class Input::State
 
   def attach_sniffer simulator: req_arg, sniffer: req_arg, port1: req_arg,
                      port2: req_arg, log_file: req_arg
-    sniffer = get_object(sniffer[:identifier], Sniffer)
+    sniffer = get_object(sniffer[:identifier], Agents::Sniffer)
 
     port1, port2 = [port1, port2].map { |p| get_interface(p) }
     link1, link2 = [port1, port2].map { |p| @links[p] }

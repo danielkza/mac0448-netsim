@@ -160,7 +160,7 @@ module Input
     }
     # $simulator attach-agent $httpc0 $h0
     rule(:attach_agent) {
-      str('attach-agent') >> space >> identifier_ref.as(:agent) >>
+      str('attach-agent') >> space >> identifier_ref.as(:agents) >>
                              space >> identifier_ref.as(:host)
     }
     # $simulator attach-agent $sniffer1 $r0.2 $r1.0 "/tmp/sniffer1"

@@ -20,6 +20,7 @@ class Simulator < SimulatorObject
     @links = []
     @hosts = []
     @routers = []
+    @agents = []
   end
 
   def add *entity
@@ -29,6 +30,7 @@ class Simulator < SimulatorObject
       if e.is_a? Link; @links << e
       elsif e.is_a? Host; @hosts << e
       elsif e.is_a? Router; @routers << e
+      elsif e.is_a? Agent; @agents << e
       else; raise 'Error! Unknown entity.'; end
     end
   end
