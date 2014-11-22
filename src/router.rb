@@ -33,6 +33,7 @@ class Router < NetworkEntity
   end
 
   def process_packet pkt
-    puts "processando #{pkt.data}"
+    puts "processando pacote"
+    send_packet pkt
   end
 end

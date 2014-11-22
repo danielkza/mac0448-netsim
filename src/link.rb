@@ -2,6 +2,8 @@ require_relative 'host'
 require_relative 'network_interface'
 
 class Link
+  attr_reader :a, :b
+
   # a e b são as interfaces dos dois lados do enlace
   def initialize a, b, capacity, delay
     @a = get_interface a
