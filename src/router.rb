@@ -7,10 +7,6 @@ class Router < NetworkEntity
     @capacities = {}
   end
 
-  def [] num
-    @interfaces[num]
-  end
-
   def set_processing_time time
     @processing_time = time
   end
@@ -35,6 +31,6 @@ class Router < NetworkEntity
 
   def process_packet pkt
     puts "processando pacote"
-    send_packet pkt
+    send_packet_r IPAddr.new(pkt.dst, Socket::AF_INET), pkt
   end
 end

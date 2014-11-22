@@ -11,7 +11,7 @@ class Host < NetworkEntity
     @ip = ip
     @dns = dns
     add_interface 0, ip
-    add_route_ip '0.0.0.0/0', gateway
+    add_route_ip '0.0.0.0', gateway, 0
     add_route_port gateway, 0
   end
 

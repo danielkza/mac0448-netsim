@@ -1,8 +1,8 @@
-require_relative 'network_interface'
 require 'ipaddr'
+require_relative 'network_interface'
+require_relative 'ip/packet'
 
 class NetworkEntity
-  attr_reader :interfaces
   attr_accessor :name
 
   def initialize num_ports
@@ -16,6 +16,10 @@ class NetworkEntity
 
   def add_interface num, ip
     @interfaces[num].ip = ip
+  end
+
+  def [] num
+    @interfaces[num]
   end
 
   def prepare
@@ -54,14 +58,19 @@ class NetworkEntity
     sort_routes!
   end
 
-  def send_packet pkt
-    send_packet_r pkt.dst, pkt
+  def send_packet content, dest
+    pkt = IP::Packet.new(version: 4, dscp: 0, ecn: 0, id: 0xda00,
+                         flags: 0x02, frag_offset: 0, ttl: 64,
+                         protocol: IP::Packet::PROTO_UDP,
+                         src: IPAddr.new(@ip).to_i, dst: IPAddr.new(dest).to_i, data: content)
+    send_packet_r IPAddr.new(pkt.dst, Socket::AF_INET), pkt
   end
 
   def send_packet_r dest_ip, pkt
-    ip = IPAddr.new(dest_ip, Socket::AF_INET)
+    puts "#{@name} #{dest_ip}"
     @routes.each do |r|
-      if r[0].include? ip
+      puts "#{r[0]} #{r[1]}"
+      if r[0].include? dest_ip
         if @interfaces[r[1]]
           @interfaces[r[1]].send_packet pkt
         else
