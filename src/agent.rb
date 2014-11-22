@@ -8,6 +8,6 @@ class Agent
   end
 
   def tick
-    puts "#{@type} agent acting..."
+    # puts "#{@type} agent acting..."
   end
 end

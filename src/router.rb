@@ -1,35 +1,39 @@
 require_relative 'network_entity'
+require 'ipaddr'
 
 class Router < NetworkEntity
   def initialize *args
     super *args
-  end
-
-  def set_performance processing_time, *args
-    @processing_time = processing_time
-    @buffers = []
-    @capacities = []
-    (0...@ports.size).each do |i|
-      @buffers << []
-      @capacities << args[i]
-    end
+    @buffers = {}
+    @capacities = {}
   end
 
   def [] port
     @ports[port]
   end
 
-  # precisa entender os parâmetros para criação de rota no arquivo de entrada...
-  def add_route
-    # aqui são criadas instâncias de Link
+  def set_performance processing_time, *args
+    @processing_time = processing_time
+    args.each_slice(2) do |slice|
+      @buffers[slice[0]] = []
+      @capacities[slice[0]] = slice[1]
+    end
+  end
+
+  def receive_packet port, pkt
+    @buffers[port] << pkt
   end
 
   def tick
-    # atualiza timer do delay
-    # verifica pacotes das interfaces e envia
+    @buffers.each_value do |v|
+      if v[0]
+        process_packet v[0]
+        v.shift
+      end
+    end
+  end
 
-    # @ports.each do |p|
-    #   puts "port #{p.ip}, cap #{@capacities[p.port]}"
-    # end
+  def process_packet pkt
+    puts "processando #{pkt.src.ip}:#{pkt.src.port} -> #{pkt.dest.ip}:#{pkt.dest.port}"
   end
 end
