@@ -3,8 +3,12 @@ require_relative 'network_entity'
 class Host < NetworkEntity
   attr_reader :ip, :gateway, :dns, :agent
 
-  def initialize
-    super 1
+  def initialize(*args)
+    super(1, *args)
+    @ip = nil
+    @dns = nil
+    @gateway = nil
+    @agent = nil
   end
 
   def config ip, dns, gateway
@@ -16,8 +20,12 @@ class Host < NetworkEntity
   end
 
   def attach_agent agent
-    # provavelmente cada host vai ter só um
-    @agent = agent
+    if @agent != agent
+      raise 'Cannot change host already set for Agent' if @agent
+
+      @agent = agent
+      agent.host = self
+    end
   end
 
   def receive_packet interface_num, pkt
