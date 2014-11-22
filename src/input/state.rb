@@ -38,7 +38,7 @@ class Input::State
     obj
   end
 
-  def assignment identifier: req_arg, initializer: reg_arg
+  def assignment identifier: req_arg, initializer: req_arg
     identifier = identifier.to_s
 
     if @identifiers.key?(identifier)
@@ -74,8 +74,11 @@ class Input::State
           raise "Unknown simulator method #{init_params[:method]}"
       end
 
+      value.name = identifier
       sim.add(value)
       @identifiers[identifier] = value
+
+      puts "set: #{identifier} => #{value.class.name}"
     end
   end
 
@@ -91,37 +94,57 @@ class Input::State
         0
       end
 
-      ent.interfaces[port]
+      [ent, port]
     end
 
-    left_iface = get_interface(left)
-    right_iface = get_interface(right)
+    l_ent, l_port = get_interface(left)
+    r_ent, r_port = get_interface(right)
 
-    link = Link.new(left_iface, right_iface, bandwidth, delay)
+    link = Link.new(l_ent.interfaces[l_port], r_ent.interfaces[r_port],
+                    bandwidth, delay)
     simulator.add(link)
+
+    puts "create_link: #{l_ent.name}.#{l_port} <-> #{r_ent.name}.#{r_port}"
   end
 
   def configure_host simulator: req_arg, host: req_arg, ip: req_arg,
                      gateway: req_arg, dns: req_arg
     host = get_object(host[:identifier], Host)
     host.config(ip, dns, gateway)
+
+    puts "configure_host: #{host.name} ip:#{ip} gateway:#{gateway} dns:#{dns}"
   end
 
   def configure_router_ports simulator: req_arg, router: req_arg, ports: req_arg
     router = get_object(router[:identifier], Router)
     ports.each do |port|
-      router.add_interface(port[:port], port[:ip])
+      port, ip = port[:port], port[:ip]
+      router.add_interface(port, ip)
+      puts "configure_port: #{router.name}.#{port} = #{ip}"
     end
   end
 
   def configure_router_routes simulator: req_arg, router: req_arg, routes: req_arg
     router = get_object(router[:identifier], Router)
     routes.each do |route|
-      ip = route[:ip]
-      if ip
-        router.
+      target = route[:target]
+      unless target
+        raise 'Invalid route target'
       end
 
+      ip = route[:ip]
+      if ip
+        router.add_route_ip(target, ip)
+        puts "configure_route: #{router.name}, #{target} via #{ip}"
+      else
+        port = route[:port]
+        unless port
+          raise 'Route has no destination'
+        end
+
+        router.add_route_port(target, port)
+        puts "configure_route: #{router.name}, #{target} port #{port}"
+      end
     end
   end
 
@@ -132,8 +155,6 @@ class Input::State
       params = statement[action]
 
       if respond_to?(action)
-        puts action.to_s
-
         if statement.key?(:simulator)
           send(action, simulator: @identifiers[statement[:simulator]], **params)
         else
@@ -146,5 +167,4 @@ class Input::State
       pp @identifiers
     end
   end
-
 end
