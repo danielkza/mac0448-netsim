@@ -9,9 +9,9 @@ class NetworkInterface
     @link = nil
   end
 
-  def send_packet content
+  def send_packet pkt
     if @link
-      @link.transport self, content
+      @link.transport self, pkt
     else
       puts 'Não conectado!'
     end

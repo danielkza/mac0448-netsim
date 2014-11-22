@@ -8,7 +8,6 @@ class Host < NetworkEntity
     @ip = ip
     @gateway = gateway
     @dns = dns
-    add_route '0.0.0.0', 0
   end
 
   def interface
@@ -18,6 +17,11 @@ class Host < NetworkEntity
   def attach_agent agent
     # provavelmente cada host vai ter só um
     @agent = agent
+  end
+
+  def send_packet dest_ip, content
+    pkt = Packet.new(@ip, 0, dest_ip, 0, content)
+    interface.send_packet pkt
   end
 
   def receive_packet port, pkt

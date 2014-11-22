@@ -1,5 +1,4 @@
 require_relative 'host'
-require_relative 'packet'
 require_relative 'network_interface'
 
 class Link
@@ -32,11 +31,11 @@ class Link
   end
 
   # Usado pela interface numa ponta para solicitar o transporte para a outra ponta
-  def transport sender, content
+  def transport sender, pkt
     if sender == @a
-      @to_b << Packet.new(@a, @b, content)
+      @to_b << pkt
     else
-      @to_a << Packet.new(@b, @a, content)
+      @to_a << pkt
     end
   end
 

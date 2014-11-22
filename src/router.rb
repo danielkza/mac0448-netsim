@@ -20,6 +20,20 @@ class Router < NetworkEntity
     end
   end
 
+  def send_packet dest_ip, content
+    ip = IPAddr.new(dest_ip).to_i
+    @routes.each do |r|
+      if ip & r[1] == r[0]
+        if r[2].is_a? String
+          send_packet r[2], content
+        else
+          @ports[r[2]].send_packet content
+        end
+        break
+      end
+    end
+  end
+
   def receive_packet port, pkt
     @buffers[port] << pkt
   end
