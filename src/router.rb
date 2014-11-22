@@ -11,12 +11,13 @@ class Router < NetworkEntity
     @interfaces[num]
   end
 
-  def set_performance processing_time, *args
-    @processing_time = processing_time
-    args.each_slice(2) do |slice|
-      @buffers[slice[0]] = []
-      @capacities[slice[0]] = slice[1]
-    end
+  def set_processing_time time
+    @processing_time = time
+  end
+
+  def set_capacity interface_num, capacity
+    @buffers[interface_num] = []
+    @capacities[interface_num] = capacity
   end
 
   def receive_packet interface_num, pkt
