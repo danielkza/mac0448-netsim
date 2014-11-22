@@ -1,8 +1,5 @@
 require 'bindata'
 
-module IP
-end
-
 class IP::Packet < BinData::Record
   class << self
     def name

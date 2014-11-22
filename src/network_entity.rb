@@ -1,11 +1,16 @@
 require 'ipaddr'
-require_relative 'network_interface'
-require_relative 'ip/packet'
+require 'socket'
 
-class NetworkEntity
+require_relative 'simulator_object'
+require_relative 'network_interface'
+require_relative 'ip'
+
+class NetworkEntity < SimulatorObject
   attr_accessor :name
 
-  def initialize num_ports
+  def initialize num_ports, *args
+    super(*args)
+
     @interfaces = {}
     (0...num_ports).each do |i|
       @interfaces[i] = NetworkInterface.new(self, i)
@@ -44,17 +49,14 @@ class NetworkEntity
   #
   # end
 
-  def sort_routes!
-    @routes.sort! { |r1, r2| r2[0].to_i <=> r1[0].to_i }
-  end
-
   def add_route_ip target, destination, mask = 24
-    @routes << [IPAddr.new("#{target}/#{mask}").mask(mask), IPAddr.new(destination)]
+    @routes << [route_target(target, mask),
+                IPAddr.new(destination, Socket::AF_INET)]
     sort_routes!
   end
 
   def add_route_port target, port, mask = 24
-    @routes << [IPAddr.new("#{target}/#{mask}").mask(mask), port]
+    @routes << [route_target(target, mask), port]
     sort_routes!
   end
 
@@ -80,4 +82,15 @@ class NetworkEntity
       end
     end
   end
+
+  protected
+
+  def route_target ip, mask
+    IPAddr.new("#{ip}/#{mask}", Socket::AF_INET).mask(mask)
+  end
+
+  def sort_routes!
+    @routes.sort! { |r1, r2| r2[0].to_i <=> r1[0].to_i }
+  end
+
 end
