@@ -14,7 +14,8 @@ class NetworkEntity
     i = @interfaces[num]
     i.ip = ip
     if i.link
-      if i == link.a
+      puts 'link'
+      if i == i.link.a
         add_route i.link.b.ip, num
       else
         add_route i.link.a.ip, num
@@ -33,6 +34,7 @@ class NetworkEntity
   # end
 
   def add_route *args
+    puts "adding #{args}"
     args.each_slice(2) do |slice|
       @routes << [IPAddr.new("#{slice[0]}/24").mask(24), slice[1]]
     end
@@ -49,7 +51,7 @@ class NetworkEntity
     puts dest_ip
     ip = IPAddr.new(dest_ip, Socket::AF_INET)
     @routes.each do |r|
-      puts "ip: #{ip}, r: #{r[0]}"
+      puts "ip: #{ip}; r: #{r[0]}, #{r[1]}"
       if r[0].include? ip
         if @interfaces[r[1]]
           puts 'enviando'

@@ -12,14 +12,14 @@ class Simulator
     @frame = 0
     @actions = {}
     @links = []
-    @agents = []
+    @hosts = []
     @routers = []
   end
 
   def add *entity
     entity.each do |e|
       if e.is_a? Link; @links << e
-      elsif e.is_a? Host; @agents << e.agent
+      elsif e.is_a? Host; @hosts << e
       elsif e.is_a? Router; @routers << e
       else; raise 'Error! Unknown entity.'; end
     end
@@ -39,8 +39,8 @@ class Simulator
     @links.each do |l|
       l.tick
     end
-    @agents.each do |a|
-      a.tick
+    @hosts.each do |a|
+      a.agent.tick if a.agent
     end
     @routers.each do |r|
       r.tick

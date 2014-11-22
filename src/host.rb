@@ -12,6 +12,7 @@ class Host < NetworkEntity
     @dns = dns
     add_route '0.0.0.0/0', gateway
     add_route gateway, 0
+    add_interface 0, ip
   end
 
   def interface
