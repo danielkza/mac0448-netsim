@@ -143,7 +143,7 @@ module Input
     rule(:configure_router_ports) {
       identifier_ref.as(:router) >> (
         space >> integer.as(:port) >> space >> ip.as(:ip)
-      ).repeat(1)
+      ).repeat(1).as(:ports)
     }
     # $simulator $r0 route 10.0.0.0 0 10.1.1.0 1 192.168.3.0 2 192.168.2.0
     rule(:configure_router_routes) {

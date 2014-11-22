@@ -22,10 +22,12 @@ module Input
     puts ('*' * 80)
     NetsimTransform.new.apply(parsed)
   end
+
+  def run_input input
+    Input::State.new.run(parse_input(input))
+  end
 end
 
 require_relative 'input/parser'
 require_relative 'input/transform'
-
-input_file = File.expand_path('../../test.ns', __FILE__)
-pp Input::parse_input(File.read(input_file))
+require_relative 'input/state'

@@ -10,13 +10,9 @@ class Host < NetworkEntity
   def config ip, dns, gateway
     @ip = ip
     @dns = dns
-    add_route '0.0.0.0/0', gateway
-    add_route gateway, 0
     add_interface 0, ip
-  end
-
-  def interface
-    @interfaces[0]
+    add_route_ip '0.0.0.0/0', gateway
+    add_route_port gateway, 0
   end
 
   def attach_agent agent

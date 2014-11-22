@@ -2,12 +2,16 @@ require_relative 'network_interface'
 require 'ipaddr'
 
 class NetworkEntity
+  attr_reader :interfaces
+  attr_accessor :name
+
   def initialize num_ports
     @interfaces = {}
     (0...num_ports).each do |i|
       @interfaces[i] = NetworkInterface.new(self, i)
     end
     @routes = []
+    @name = nil
   end
 
   def add_interface num, ip
@@ -15,10 +19,10 @@ class NetworkEntity
     i.ip = ip
     if i.link
       puts 'link'
-      if i == i.link.a
-        add_route i.link.b.ip, num
+      if i == link.a
+        add_route_port i.link.b.ip, num
       else
-        add_route i.link.a.ip, num
+        add_route_port i.link.a.ip, num
       end
     end
   end
@@ -33,14 +37,19 @@ class NetworkEntity
   #
   # end
 
-  def add_route *args
-    puts "adding #{args}"
-    args.each_slice(2) do |slice|
-      @routes << [IPAddr.new("#{slice[0]}/24").mask(24), slice[1]]
-    end
+  def sort_routes!
     @routes.sort! { |r1, r2| r2[0].to_i <=> r1[0].to_i }
-    puts "#{@ip}: "
     p @routes
+  end
+
+  def add_route_ip target, destination, mask = 24
+    @routes << [IPAddr.new("#{target}/#{mask}").mask(mask), IPAddr.new(destination)]
+    sort_routes!
+  end
+
+  def add_route_port target, port, mask = 24
+    @routes << [IPAddr.new("#{target}/#{mask}").mask(mask), port]
+    sort_routes!
   end
 
   def send_packet pkt
