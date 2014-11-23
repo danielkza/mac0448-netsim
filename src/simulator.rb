@@ -48,7 +48,7 @@ class Simulator < SimulatorObject
   end
 
   def run_action cmd
-    if cmd == 'finished'
+    if cmd == 'finish'
       @finished = true
     end
   end

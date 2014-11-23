@@ -22,7 +22,7 @@ module Input
     puts ('*' * 80)
     transformed = NetsimTransform.new.apply(parsed)
     pp transformed
-    parsed
+    transformed
   end
 
   def run_input input
