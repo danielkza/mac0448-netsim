@@ -1,0 +1,40 @@
+####################################################
+# MAC0448 - Programação para Redes de Computadores #
+#        Exercício-Programa 3 (23/11/2014)         #
+#                                                  #
+# Daniel Quadros de Miranda        nº. USP 7577406 #
+# Victor David Santos              nº. USP 7152628 #
+####################################################
+
+1) Observações gerais
+
+O programa foi desenvolvido em linguagem Ruby, utilizando algumas bibliotecas
+para auxiliar em tarefas específicas:
+
+  - parslet: para fazer o parsing do arquivo de entrada
+  - bindata: para montar o conteúdo dos pacotes
+
+2) Execução do programa
+
+Como o simulador foi desenvolvido em Ruby, não é necessária a compilação do
+código. Porém, o programa depende de algumas bibliotecas (gems), as quais estão
+listadas no arquivo 'Gemfile'. Assim, para instalar todas elas automaticamente,
+basta executar, no diretório do arquivo 'Gemfile':
+
+    bundle install
+
+Este comando requer a gem 'bundler' instalada. Para instalá-la, basta utilizar:
+
+    gem install bundler
+
+Ou, ainda, pode-se instalar cada uma das dependências com o próprio comando gem:
+
+    gem install parslet
+    gem install bindata
+
+Instaladas as dependências, o programa pode ser executado com:
+
+    ruby main.rb < FILE
+
+No comando acima, FILE é o arquivo de entrada no formato especificado no
+enunciado do EP.
