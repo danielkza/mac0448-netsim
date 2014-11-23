@@ -29,7 +29,6 @@ class Input::State
         raise "Unknown action #{action.to_s}"
       end
     end
-    puts 'a'
   end
 
   def get_object identifier, type
@@ -197,6 +196,21 @@ class Input::State
     link1.attach_sniffer(sniffer)
     puts "attach_sniffer: #{sniffer.name} <= #{port1} <-> #{port2}"
   end
+
+  def schedule_action simulator: req_arg, time: req_arg, action: req_arg
+    agent, *cmd = action.split(' ')
+    if cmd.empty?
+      cmd = agent
+      simulator.add_simulator_action(time, cmd)
+      puts "simulator action: $#{simulator.name} at #{time} do #{cmd}"
+    else
+      agent = get_object(agent, Agent)
+
+      simulator.add_action(time, agent, cmd)
+      puts "schedule_action: $#{agent.name} at #{time} do #{cmd}"
+    end
+  end
+
   protected
 
   Interface = Struct.new(:ent, :port) do

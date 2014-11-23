@@ -20,7 +20,9 @@ module Input
     parsed = NetsimParser.new.parse_with_debug(input)
     pp parsed
     puts ('*' * 80)
-    NetsimTransform.new.apply(parsed)
+    transformed = NetsimTransform.new.apply(parsed)
+    pp transformed
+    parsed
   end
 
   def run_input input

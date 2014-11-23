@@ -16,8 +16,8 @@ class Agent < SimulatorObject
     end
   end
 
-  def execute args
-    puts "#{self.class.name} agent executing: #{args}"
+  def run_action cmd
+    puts "#{self.name} agent executing: #{cmd}"
   end
 
   def tick
