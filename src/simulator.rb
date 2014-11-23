@@ -31,10 +31,7 @@ class Simulator < SimulatorObject
       e.simulator = self
 
       if e.is_a? Link; @links << e
-      elsif e.is_a? Host
-        puts 'add host...'
-        @hosts << e
-        @host_ips[e.name] = e.ip
+      elsif e.is_a? Host; @hosts << e
       elsif e.is_a? Router; @routers << e
       else; raise 'Error! Unknown entity.'; end
     end

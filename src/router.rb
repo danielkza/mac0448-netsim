@@ -30,7 +30,6 @@ class Router < NetworkEntity
   end
 
   def process_packet pkt
-    puts "processando pacote"
     send_packet_r IPAddr.new(pkt.dst, Socket::AF_INET), pkt
   end
 end

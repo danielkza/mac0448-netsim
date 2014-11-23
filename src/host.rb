@@ -29,6 +29,11 @@ class Host < NetworkEntity
     end
   end
 
+  def prepare
+    super
+    @simulator.host_ips[@name] = @ip
+  end
+
   def run_action command
     @agent.run_action command if @agent
   end

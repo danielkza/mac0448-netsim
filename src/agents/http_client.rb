@@ -14,34 +14,31 @@ class Agents::HTTPClient < Agent
       args += ' HTTP/1.1'
     end
     begin
-      puts 'tentando'
       ip = IPAddr.new a[1]
       @host.send_packet args, a[1]
       @waiting_http_response = true
-      puts 'foi'
     rescue
       # tentar DNS
       @host.send_packet "A #{a[1]}", @host.dns
       @waiting_dns_response = a[1]
       @msg = args
-      puts 'nao foi'
     end
   end
 
   def tick
-    puts 'http client tick'
     if @waiting_http_response
       if @host.buffer[0]
-        @host.buffer.shift
+        pkt = @host.buffer.shift
+        puts 'recebi:'
+        puts pkt.data
         @waiting_http_response = false
       end
     elsif @waiting_dns_response
-      puts 'esperando dns'
       if @host.buffer[0]
         data = @host.buffer.shift.data.split
         if data[0] == @waiting_dns_response
-          puts "chegou #{data[2]}"
           @host.send_packet @msg, data[2]
+          @waiting_http_response = true
           @waiting_dns_response = false
         end
       end

@@ -38,10 +38,11 @@ l1 = Link.new h1[0], r0[1], 45, 234
 l2 = Link.new h2[0], r1[0], 43, 345
 l3 = Link.new r0[2], r1[1], 34, 233
 
-sim.add r0, r1, h0, h1, h2, l0, l1, l2, l3
-
 h0.attach_agent(Agents::HTTPClient.new)
+h1.attach_agent(Agents::HTTPServer.new)
 h2.attach_agent(Agents::DNSServer.new)
+
+sim.add r0, r1, h0, h1, h2, l0, l1, l2, l3
 
 r0.prepare
 r1.prepare
@@ -53,8 +54,7 @@ h2.prepare
 # h1.send_packet('b' * 1410, '10.0.0.2')
 # h1.send_packet('c' * 1410, '192.168.0.2')
 
-p sim.host_ips
 sim.add_action(100, h0, 'GET h1')
-sim.add_simulator_action(1000, 'finish')
+sim.add_simulator_action(1500, 'finish')
 
 loop { sim.tick }

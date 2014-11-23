@@ -72,9 +72,7 @@ class NetworkEntity < SimulatorObject
   end
 
   def send_packet_r dest_ip, pkt
-    puts "#{@name} #{dest_ip}"
     @routes.each do |r|
-      puts "#{r[0]} #{r[1]}"
       if r[0].include? dest_ip
         if @interfaces[r[1]]
           @interfaces[r[1]].send_packet pkt
@@ -95,5 +93,4 @@ class NetworkEntity < SimulatorObject
   def sort_routes!
     @routes.sort! { |r1, r2| r2[0].to_i <=> r1[0].to_i }
   end
-
 end
