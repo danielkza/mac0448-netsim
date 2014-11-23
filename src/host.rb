@@ -1,7 +1,7 @@
 require_relative 'network_entity'
 
 class Host < NetworkEntity
-  attr_reader :ip, :gateway, :dns, :agent
+  attr_reader :ip, :gateway, :dns, :agent, :buffer
 
   def initialize(*args)
     super(1, *args)
@@ -9,6 +9,7 @@ class Host < NetworkEntity
     @dns = nil
     @gateway = nil
     @agent = nil
+    @buffer = []
   end
 
   def config ip, dns, gateway
@@ -29,6 +30,6 @@ class Host < NetworkEntity
   end
 
   def receive_packet interface_num, pkt
-    puts "#{@ip}: recebi #{pkt.data}"
+    @buffer << pkt
   end
 end
