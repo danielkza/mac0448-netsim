@@ -9,6 +9,7 @@ class NetworkInterface
 
   def send_packet pkt
     if @link
+      puts "enviando para #{pkt.dst}"
       @link.transport self, pkt
     else
       puts 'Não conectado!'

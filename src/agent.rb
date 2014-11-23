@@ -12,15 +12,11 @@ class Agent < SimulatorObject
     if @host != host
       raise 'Cannot change host already set for Agent' if @host
       @host = host
-      host.simulator.add(self)
+      # host.simulator.add(self)
     end
   end
 
   def run_action cmd
     puts "#{self.name} agent executing: #{cmd}"
-  end
-
-  def tick
-    # puts "#{@type} agent acting..."
   end
 end

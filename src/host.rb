@@ -29,10 +29,12 @@ class Host < NetworkEntity
     end
   end
 
+  def run_action command
+    @agent.run_action command if @agent
+  end
+
   def tick
-    if @agent
-      @agent.tick
-    end
+    @agent.tick if @agent
   end
 
   def receive_packet interface_num, pkt

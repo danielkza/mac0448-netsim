@@ -1,7 +1,7 @@
 require_relative '../agent'
 
-class HTTPClient < Agent
-  def execute args
+class Agents::HTTPClient < Agent
+  def run_action args
     a = args.split
     if a[0] != 'GET'
       puts 'Error'
@@ -14,24 +14,36 @@ class HTTPClient < Agent
       args += ' HTTP/1.1'
     end
     begin
+      puts 'tentando'
       ip = IPAddr.new a[1]
       @host.send_packet args, a[1]
       @waiting_http_response = true
+      puts 'foi'
     rescue
       # tentar DNS
       @host.send_packet "A #{a[1]}", @host.dns
-      @waiting_dns_response = true
+      @waiting_dns_response = a[1]
       @msg = args
+      puts 'nao foi'
     end
   end
 
   def tick
+    puts 'http client tick'
     if @waiting_http_response
-      @host.buffer.shift if @host.buffer[0]
-    elsif @waiting_dns_response
       if @host.buffer[0]
-        addr = @host.buffer.shift.data.split[1]
-        @host.send_packet @msg, addr
+        @host.buffer.shift
+        @waiting_http_response = false
+      end
+    elsif @waiting_dns_response
+      puts 'esperando dns'
+      if @host.buffer[0]
+        data = @host.buffer.shift.data.split
+        if data[0] == @waiting_dns_response
+          puts "chegou #{data[2]}"
+          @host.send_packet @msg, data[2]
+          @waiting_dns_response = false
+        end
       end
     end
   end

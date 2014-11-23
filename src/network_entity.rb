@@ -61,11 +61,14 @@ class NetworkEntity < SimulatorObject
   end
 
   def send_packet content, dest
+    src = IPAddr.new(@ip, Socket::AF_INET)
+    dst = IPAddr.new(dest, Socket::AF_INET)
     pkt = IP::Packet.new(version: 4, dscp: 0, ecn: 0, id: 0xda00,
                          flags: 0x02, frag_offset: 0, ttl: 64,
                          protocol: IP::Packet::PROTO_UDP,
-                         src: IPAddr.new(@ip).to_i, dst: IPAddr.new(dest).to_i, data: content)
-    send_packet_r IPAddr.new(pkt.dst, Socket::AF_INET), pkt
+                         src: src.to_i, dst: dst.to_i, data: content)
+    puts "sending from #{src} to #{dst}"
+    send_packet_r dst, pkt
   end
 
   def send_packet_r dest_ip, pkt

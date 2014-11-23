@@ -1,7 +1,7 @@
 require_relative 'link'
 require_relative 'host'
 require_relative 'router'
-require_relative 'agent'
+require_relative 'agents'
 
 Action = Struct.new(:agent, :command)
 
@@ -12,6 +12,8 @@ class Simulator < SimulatorObject
   # Intervalo entre cada passo da simulação, em microssegundos
   SIM_TICK = 100
 
+  attr_reader :host_ips
+
   def initialize
     super
     @time = 0
@@ -20,8 +22,8 @@ class Simulator < SimulatorObject
     @links = []
     @hosts = []
     @routers = []
-    @agents = []
     @finished = false
+    @host_ips = {}
   end
 
   def add *entity
@@ -29,9 +31,11 @@ class Simulator < SimulatorObject
       e.simulator = self
 
       if e.is_a? Link; @links << e
-      elsif e.is_a? Host; @hosts << e
+      elsif e.is_a? Host
+        puts 'add host...'
+        @hosts << e
+        @host_ips[e.name] = e.ip
       elsif e.is_a? Router; @routers << e
-      elsif e.is_a? Agent; @agents << e
       else; raise 'Error! Unknown entity.'; end
     end
   end
@@ -48,8 +52,9 @@ class Simulator < SimulatorObject
   end
 
   def run_action cmd
-    if cmd == 'finished'
+    if cmd == 'finish'
       @finished = true
+      exit 0
     end
   end
 
@@ -70,7 +75,7 @@ class Simulator < SimulatorObject
       r.tick
     end
 
-    @time += SimConfig::SIM_TICK
+    @time += SIM_TICK
     @frame += 1
   end
 
