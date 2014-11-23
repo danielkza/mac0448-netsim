@@ -1,6 +1,8 @@
 require_relative '../agent'
 
 class Agents::Sniffer < Agent
+  attr_accessor :log_file_name
+
   def initialize *args
     super(*args)
     @link = nil
@@ -19,6 +21,14 @@ class Agents::Sniffer < Agent
   def prepare
     @log_file = File.open(@log_file_name, 'a')
     write_log_header
+  end
+
+  def log pkt
+    @log_file.write "*** Packet #{pkt.id} captured by sniffer #{@name} ***\n" +
+                    "- Source IP: #{IPAddr.new(pkt.src, Socket::AF_INET)}\n" +
+                    "- Destination IP: #{IPAddr.new(pkt.dst, Socket::AF_INET)}\n" +
+                    "==========================\n" +
+                    "Contents:\n" + pkt.data + "\n\n"
   end
 
   protected

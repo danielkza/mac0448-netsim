@@ -33,6 +33,7 @@ class Simulator < SimulatorObject
       if e.is_a? Link; @links << e
       elsif e.is_a? Host; @hosts << e
       elsif e.is_a? Router; @routers << e
+      elsif e.is_a? Agent;
       else; raise 'Error! Unknown entity.'; end
     end
   end

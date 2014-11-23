@@ -43,17 +43,10 @@ class Link < SimulatorObject
   def tick
     if @to_a[0]
       @a.receive_packet @to_a[0]
-      @to_a.shift
+      @sniffer.log @to_a.shift if @sniffer
     elsif @to_b[0]
       @b.receive_packet @to_b[0]
-      @to_b.shift
+      @sniffer.log @to_b.shift if @sniffer
     end
-
-    # loga se tiver sniffer
-    # if @sniffer_id
-    #   File.open(@sniffer_output, 'a') do |f|
-    #     f.puts "log from #{@sniffer_id}..."
-    #   end
-    # end
   end
 end

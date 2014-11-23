@@ -8,6 +8,13 @@ h0 = Host.new
 h1 = Host.new
 h2 = Host.new
 
+l0 = Link.new h0[0], r0[0], 554, 4
+l1 = Link.new h1[0], r0[1], 45, 234
+l2 = Link.new h2[0], r1[0], 43, 345
+l3 = Link.new r0[2], r1[1], 34, 233
+
+sim.add r0, r1, h0, h1, h2, l0, l1, l2, l3
+
 h0.config '10.0.0.2', '192.168.0.2', '10.0.0.1'
 h1.config '10.0.0.3', '5.5.5.5', '10.0.0.1'
 h2.config '192.168.0.2', '5.5.5.5', '192.168.0.1'
@@ -33,16 +40,26 @@ r1.set_processing_time 34
 r1.set_capacity 0, 333
 r1.set_capacity 1, 434
 
-l0 = Link.new h0[0], r0[0], 554, 4
-l1 = Link.new h1[0], r0[1], 45, 234
-l2 = Link.new h2[0], r1[0], 43, 345
-l3 = Link.new r0[2], r1[1], 34, 233
-
 h0.attach_agent(Agents::HTTPClient.new)
 h1.attach_agent(Agents::HTTPServer.new)
 h2.attach_agent(Agents::DNSServer.new)
+s0 = Agents::Sniffer.new
+s0.log_file_name = 'sn1.txt'
+s0.prepare
+l0.attach_sniffer(s0)
+s1 = Agents::Sniffer.new
+s1.log_file_name = 'sn2.txt'
+s1.prepare
+l1.attach_sniffer(s1)
+s2 = Agents::Sniffer.new
+s2.log_file_name = 'sn3.txt'
+s2.prepare
+l2.attach_sniffer(s2)
+s3 = Agents::Sniffer.new
+s3.log_file_name = 'sn4.txt'
+s3.prepare
+l3.attach_sniffer(s3)
 
-sim.add r0, r1, h0, h1, h2, l0, l1, l2, l3
 
 r0.prepare
 r1.prepare

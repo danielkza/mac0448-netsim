@@ -67,7 +67,6 @@ class NetworkEntity < SimulatorObject
                          flags: 0x02, frag_offset: 0, ttl: 64,
                          protocol: IP::Packet::PROTO_UDP,
                          src: src.to_i, dst: dst.to_i, data: content)
-    puts "sending from #{src} to #{dst}"
     send_packet_r dst, pkt
   end
 
