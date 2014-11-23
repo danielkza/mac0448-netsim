@@ -3,7 +3,7 @@ require_relative 'host'
 require_relative 'router'
 require_relative 'agent'
 
-Action = Struct.new(:command, :args)
+Action = Struct.new(:agent, :command)
 
 class Simulator < SimulatorObject
   # Maximum segment size
@@ -21,6 +21,7 @@ class Simulator < SimulatorObject
     @hosts = []
     @routers = []
     @agents = []
+    @finished = false
   end
 
   def add *entity
@@ -35,23 +36,36 @@ class Simulator < SimulatorObject
     end
   end
 
-  def at time, command, args = ''
-    key = ((time * 1000000) / SIM_TICK).ceil
+  def add_action time, agent, command
+    key = (time / SIM_TICK).ceil
     @actions[key] = [] if @actions[key].nil?
-    @actions[key] << Action.new(command, args)
+    @actions[key] << Action.new(agent, command)
     self
+  end
+
+  def add_simulator_action time, command
+    add_action(time, self, command)
+  end
+
+  def run_action cmd
+    if cmd == 'finished'
+      @finished = true
+    end
   end
 
   def tick
     if @actions[@frame]
-      parse_actions
+      run_frame_actions(@frame)
     end
+
     @links.each do |l|
       l.tick
     end
-    @hosts.each do |a|
-      a.agent.tick if a.agent
+
+    @hosts.each do |h|
+      h.tick
     end
+
     @routers.each do |r|
       r.tick
     end
@@ -60,17 +74,9 @@ class Simulator < SimulatorObject
     @frame += 1
   end
 
-  def parse_actions
-    @actions[@frame].each do |action|
-      cmd = action.command
-      if cmd == 'finish'
-        puts 'Finishing simulation.'
-        exit 0
-      elsif cmd.is_a? Agent
-        cmd.execute action.args
-      else
-        puts 'Error! Unknown command.'
-      end
+  def run_frame_actions(frame)
+    @actions[frame].each do |action|
+      action.agent.run_action(action.command)
     end
   end
 end

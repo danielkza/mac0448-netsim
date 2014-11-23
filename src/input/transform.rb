@@ -1,5 +1,12 @@
 module Input
+  class StringTransform < Parslet::Transform
+    rule(:char => simple(:c)) { c }
+    rule(:esc => simple(:c)) { c }
+    rule(:str => sequence(:chars)) { chars.join }
+  end
+
   class NetsimTransform < Parslet::Transform
+    rule(:char => simple(:c)) { c }
     rule(:int => simple(:s)) { s.to_i }
     rule(:float => simple(:s)) { s.to_f }
     rule(:amount => simple(:n), :bw_unit => simple(:u)) {
@@ -14,5 +21,11 @@ module Input
     rule(:statement => {:assignment => subtree(:assignment)}) {
       {:assignment => assignment}
     }
+
+    def apply obj, context=nil
+      @st ||= StringTransform.new
+      obj = @st.apply(obj)
+      super.apply(obj, context)
+    end
   end
 end

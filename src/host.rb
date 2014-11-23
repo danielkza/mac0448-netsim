@@ -29,6 +29,12 @@ class Host < NetworkEntity
     end
   end
 
+  def tick
+    if @agent
+      @agent.tick
+    end
+  end
+
   def receive_packet interface_num, pkt
     @buffer << pkt
   end

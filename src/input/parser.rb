@@ -21,11 +21,6 @@ module Input
     root :string
   end
 
-  class StringTransform < Parslet::Transform
-    rule(:str => sequence(:chars)) { chars.join }
-    rule(:esc => simple(:c)) { c }
-  end
-
   class NetsimParser < Parslet::Parser
     def any_of strs
       strs.map(&method(:str)).reduce(:|)
@@ -47,7 +42,7 @@ module Input
     rule(:float)    { (digits >> str('.') >> digits).as(:float) }
     rule(:number)   { float | integer }
     rule(:letter)   { match('[a-zA-Z]') }
-    rule(:string)   { str(?") >> (str(?").absent? >> any).repeat(1) >> str(?") }
+    rule(:string)   { StringParser.new }
 
     # Unit/type matchers
 
